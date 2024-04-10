@@ -1,7 +1,9 @@
-import Button from '@/component/common/Button.tsx';
+import {Fragment} from "react";
 
 export default function Main() {
     return (
-        <Button> 안녕하세요? </Button>
+        <Fragment>
+
+        </Fragment>
     )
 }
