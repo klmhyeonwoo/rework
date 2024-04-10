@@ -2,11 +2,17 @@ import {Fragment} from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Main from "@/app/main";
 import DefaultLayout from "@/layout/default.tsx";
+import SignIn from "@/app/signin";
 
-const routerChildren = [{
+const routerChildren = [
+    {
     path: '/',
     element: <Main/>
-}]
+    },
+    {
+    path: '/signin',
+    element: <SignIn/>
+}];
 
 const router = createBrowserRouter([{
     path: '/',
