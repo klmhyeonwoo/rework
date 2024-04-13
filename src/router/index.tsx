@@ -6,13 +6,14 @@ import SignIn from "@/app/signin";
 
 const routerChildren = [
     {
-    path: '/',
-    element: <Main/>
+        path: '/main',
+        element: <Main/>
     },
     {
-    path: '/signin',
-    element: <SignIn/>
-}];
+        path: '/',
+        element: <SignIn/>
+    },
+];
 
 const router = createBrowserRouter([{
     path: '/',

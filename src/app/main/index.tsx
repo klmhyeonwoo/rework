@@ -1,9 +1,8 @@
-import {Fragment} from "react";
 
 export default function Main() {
     return (
-        <Fragment>
-
-        </Fragment>
+        <section>
+        {/* TODO: 메인 페이지 구성 필요 */}
+        </section>
     )
 }
