@@ -6,6 +6,7 @@ import {EMAIL_REGEX} from "@/util/regex.ts";
 import {fadeUp} from "@/style/keyframe.ts";
 import Button from "@/component/common/Button.tsx";
 import {DESIGN_SYSTEM_COLOR, DESIGN_SYSTEM_TEXT} from "@/style/variable.ts";
+import {useNavigate} from "react-router-dom";
 
 export default function SignIn() {
     const [ID, setID] = useState('');
@@ -15,6 +16,8 @@ export default function SignIn() {
 
     const [USER_EMAIL, setUserEmail] = useState('');
     const [USER_EMAIL_CHECK, setEmailCheck] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.name === "ID") {
@@ -43,6 +46,11 @@ export default function SignIn() {
         }
     }
 
+    const handleLogin = () => {
+        /** TODO: 로그인 API 로직 */
+        navigate('/main');
+    }
+
     return(
         <section css={css`
           position: absolute;
@@ -57,76 +65,6 @@ export default function SignIn() {
           justify-content: center;
           align-items: center;
         `}>
-            <article css={css`
-              display: flex;
-              flex-direction: column;
-              background: #333333;
-              width: 40rem;
-              border-radius: 7px;
-              justify-content: center;
-              align-items: center;
-              padding: 6rem 1.5rem;
-              row-gap: 2.5rem;
-              box-sizing: border-box;
-              transition: 0.4s all;
-              transform: ${USER_EMAIL_CHECK ? "translateY(-10px)" : ""};
-            `}>
-                <span css={css`
-                  ${DESIGN_SYSTEM_TEXT.S1}
-                  color: white;
-                  
-                `}> 우리는 효율적으로 일하는 리워크 입니다 </span>
-                <div css={css`
-                  ${DESIGN_SYSTEM_TEXT.CAPTION}
-                  color: white;
-                  text-align: center;
-
-                  span {
-                    display: block;
-                  }
-                `}>
-                    <span> 리워크는 업무 효율성을 위한 기록용 아카이빙 서비스를 제공하고 있어요 </span>
-                    <span> 소규모 회원을 위한 서비스 품질을 위해 폐쇄성 있는 서비스를 제공해요 </span>
-                    <Input
-                        name="USER_EMAIL"
-                        css={css`
-                      box-shadow: none;
-                      margin-top: 1rem;
-                      background: none;
-                      color: white;
-                      text-align: center;
-                      
-                      &::placeholder {
-                        ${DESIGN_SYSTEM_COLOR.whiteOpacity50}
-                      }
-                    `} value={USER_EMAIL} placeholder={"이메일을 기재해주시면 컨텍 메일을 드릴게요"} onChange={(e) => handleChange(e)}/>
-                    <div css={css`
-                      column-gap: 1rem;
-                      justify-content: center;
-                      margin-top: 1rem;
-                      display: ${USER_EMAIL_CHECK ? "flex" : "none"};
-                      animation: ${fadeUp} 0.4s;
-                    `}>
-                        <span> 기재해주신 이메일로 컨텍 메일을 보내드릴게요 </span>
-                        <div css={css`
-                          display: flex;
-                          column-gap: .5rem;
-                          
-                          span:nth-of-type(1), span:nth-of-type(3)  {
-                            cursor: pointer;
-                            &:hover {
-                              text-decoration : underline;
-                              text-underline-offset : .5rem;
-                            }
-                          }
-                        `}>
-                            <span>예</span>
-                            <span>/</span>
-                            <span>아니요</span>
-                        </div>
-                    </div>
-                </div>
-            </article>
             <article css={css`
               display: flex;
               flex-direction: column;
@@ -153,7 +91,81 @@ export default function SignIn() {
                     <Button css={css`
                       display: ${PW_CHECK ? "flex" : "none"};
                       animation: ${fadeUp} 0.4s;
-                    `}> 로그인 </Button>
+                    `}
+                    onClick={handleLogin}
+                    > 로그인 </Button>
+                </div>
+            </article>
+            <article css={css`
+              display: flex;
+              flex-direction: column;
+              background: #333333;
+              width: 40rem;
+              border-radius: 7px;
+              justify-content: center;
+              align-items: center;
+              padding: 6rem 1.5rem;
+              row-gap: 2.5rem;
+              box-sizing: border-box;
+              transition: 0.4s all;
+              transform: ${USER_EMAIL_CHECK ? "translateY(-10px)" : ""};
+            `}>
+                <span css={css`
+                  ${DESIGN_SYSTEM_TEXT.S1}
+                  color: white;
+                  font-weight: 400;
+                `}> 우리는 효율적으로 일하는 <span css={css`
+                  ${DESIGN_SYSTEM_TEXT.S1}
+                `}>리워크</span> 입니다 </span>
+                <div css={css`
+                  ${DESIGN_SYSTEM_TEXT.CAPTION}
+                  color: white;
+                  text-align: center;
+
+                  span {
+                    display: block;
+                  }
+                `}>
+                    <span> 리워크는 업무 효율성을 위한 기록용 아카이빙 서비스를 제공하고 있어요 </span>
+                    <span> 서비스 품질을 위해 소규모 회원을 위한 폐쇄성 있는 서비스를 제공해요 </span>
+                    <Input
+                        name="USER_EMAIL"
+                        css={css`
+                      box-shadow: none;
+                      margin-top: 1rem;
+                      background: none;
+                      color: white;
+                      text-align: center;
+                      
+                      &::placeholder {
+                        ${DESIGN_SYSTEM_COLOR.whiteOpacity50}
+                      }
+                    `} value={USER_EMAIL} placeholder={"이곳에 이메일을 기재해주시면 컨텍 메일을 드릴게요"} onChange={(e) => handleChange(e)}/>
+                    <div css={css`
+                      column-gap: 1rem;
+                      justify-content: center;
+                      margin-top: 1rem;
+                      display: ${USER_EMAIL_CHECK ? "flex" : "none"};
+                      animation: ${fadeUp} 0.4s;
+                    `}>
+                        <span> 기재해주신 이메일로 컨텍 메일을 보내드릴게요 </span>
+                        <div css={css`
+                          display: flex;
+                          column-gap: .5rem;
+                          
+                          span:nth-of-type(1), span:nth-of-type(3)  {
+                            cursor: pointer;
+                            &:hover {
+                              text-decoration : underline;
+                              text-underline-offset : .5rem;
+                            }
+                          }
+                        `}>
+                            <span>예</span>
+                            <span>/</span>
+                            <span>아니요</span>
+                        </div>
+                    </div>
                 </div>
             </article>
         </section>
