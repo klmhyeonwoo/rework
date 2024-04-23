@@ -12,7 +12,7 @@ export const fadeIn = keyframes`
 
 export const fadeUp = keyframes`
     0% {
-        transform : translateY(10px);
+        transform : translateY(0.5rem);
         opacity: 0;
     }
     50% {
@@ -23,7 +23,7 @@ export const fadeUp = keyframes`
     }
     100% {
         opacity: 1;
-        transform : none;
+        transform: none;
 `;
 
 export const fadeLeft = keyframes`

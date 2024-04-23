@@ -1,5 +1,5 @@
 :root {
-  font-family: Pretendard;
+  font-family: Pretendard !important;
 }
 
 html {
@@ -8,5 +8,5 @@ html {
 
 body {
   font-size: 1.4rem;
-  color: #333333;
+  color: #4E5968;
 }
