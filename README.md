@@ -1,30 +1,7 @@
-# React + TypeScript + Vite
+![화면 기록 2024-04-23 오후 11 52 34](https://github.com/klmhyeonwoo/REWORK/assets/19422885/f86fd9de-1bcf-48d4-b78b-adb0dbdac506)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### REWORK
+<p> 리워크는 업무 효율을 위한 메모에 따른 아카이빙 데이터를 수집해요, 그리고 이 데이터들은 추후에 분석을 통한 성과지표로 정리되어 사용자에게 전달이 됩니다. </p>
+<p> 제작자가 필요로 하던 서비스였기 때문에, 어떠한 누군가도 필요한 서비스라고 생각이 들었습니다. </p>
+<p>리워크는 현재 초대장을 통한 폐쇄적인 커뮤니티를 형성하고 있습니다. </p>
+<p>계속해서 멋진 서비스를 만들고, 좋은 소식을 찾아 들고오겠습니다 👋🏻 </p>
