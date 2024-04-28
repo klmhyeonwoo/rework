@@ -1,4 +1,4 @@
-import Logo from "@/assets/logo_symbol.svg?react";
+import Logo from "@/assets/img/logo_symbol.svg?react";
 import { css } from "@emotion/react";
 import { fadeUp } from "@/style/keyframe.ts";
 import WelcomMenting from "@/component/main/WelcomeMenting.tsx";
