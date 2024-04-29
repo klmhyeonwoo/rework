@@ -3,20 +3,10 @@ import { fadeUp } from "@/style/keyframe.ts";
 
 interface welcomeMentingProps {
   chapter: number;
+  month: number | string;
+  day: number | string;
 }
-export default function WelcomMenting({ chapter }: welcomeMentingProps) {
-  const scaledDateNumber = (number: number) => {
-    if (number < 10) {
-      return `0${number}`;
-    }
-
-    return number;
-  };
-
-  const dateObj = new Date();
-  const month = scaledDateNumber(dateObj.getMonth() + 1);
-  const day = scaledDateNumber(dateObj.getDate());
-
+export default function WelcomMenting({ chapter, month, day }: welcomeMentingProps) {
   const introduceMessage = [
     <span key={0}>
       오늘은 어떤 일에 <span className="bold">몰입</span>을 하게 될까요?
@@ -25,8 +15,7 @@ export default function WelcomMenting({ chapter }: welcomeMentingProps) {
       {month}월 {day}일의 <span className="bold">성장</span>을 시작합니다
     </span>,
     <span key={2}>
-      현우님의 꿈을 위해 오늘도 <span className="bold">리워크</span>는
-      함께합니다
+      현우님의 꿈을 위해 오늘도 <span className="bold">리워크</span>는 함께합니다
     </span>,
   ];
 
