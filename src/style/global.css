@@ -9,4 +9,6 @@ html {
 body {
   font-size: 1.4rem;
   color: #4E5968;
+  width: 100dvw;
+  height: 100dvh;
 }

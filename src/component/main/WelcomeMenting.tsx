@@ -22,6 +22,11 @@ export default function WelcomMenting({ chapter, month, day }: welcomeMentingPro
   return (
     <div
       css={css`
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
         width: 100%;
         box-sizing: border-box;
 

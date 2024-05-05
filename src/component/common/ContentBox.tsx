@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactElement } from "react";
 import { css } from "@emotion/react";
 import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
 
@@ -6,14 +6,15 @@ interface boxProps {
   title: string;
   subscribe?: string;
   length?: number;
+  util?: ReactElement<SVGElement>;
 }
-export default function ContentBox({ title, subscribe, length, children, ...props }: PropsWithChildren<boxProps>) {
+export default function ContentBox({ title, subscribe, length, children, util, ...props }: PropsWithChildren<boxProps>) {
   return (
     <article
       css={css`
         display: flex;
         flex-direction: column;
-        row-gap: 16px;
+        row-gap: 1.2rem;
       `}
     >
       <div
@@ -23,15 +24,19 @@ export default function ContentBox({ title, subscribe, length, children, ...prop
           font-size: 1.5rem;
         `}
       >
-        {title} {length && `(${length})`}
+        {title} {typeof length === "number" && `(${length})`}
       </div>
       <div
         css={css`
           color: #aeaeae;
           font-size: 1.2rem;
+          display: flex;
+          align-items: center;
+          height: 1.5rem;
         `}
       >
-        {subscribe}
+        <span>{subscribe}</span>
+        {util}
       </div>
       <div
         css={css`
