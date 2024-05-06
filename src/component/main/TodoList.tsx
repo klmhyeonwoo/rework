@@ -13,7 +13,11 @@ interface listProps {
 const TodoList = forwardRef(({ data, completeList, setComplete, todoList, setTodo }: listProps, ref: React.Ref<HTMLDivElement>) => {
   const changeNewData = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const list = [...todoList];
-    list[index] = event.target.value;
+    if (event.target.value === "") {
+      list.shift();
+    } else {
+      list[index] = event.target.value;
+    }
     setTodo(list);
   };
 
