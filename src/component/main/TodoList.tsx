@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import Checkbox from "@/assets/img/empty-box.svg?react";
-import React, { Dispatch, Fragment, SetStateAction } from "react";
+import React, { Dispatch, forwardRef, Fragment, SetStateAction } from "react";
 import Input from "@/component/main/Input.tsx";
 
 interface listProps {
@@ -10,10 +10,14 @@ interface listProps {
   completeList: string[];
   setComplete: Dispatch<SetStateAction<string[]>>;
 }
-export default function TodoList({ data, completeList, setComplete, todoList, setTodo }: listProps) {
+const TodoList = forwardRef(({ data, completeList, setComplete, todoList, setTodo }: listProps, ref: React.Ref<HTMLDivElement>) => {
   const changeNewData = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const list = [...todoList];
-    list[index] = event.target.value;
+    if (event.target.value === "") {
+      list.shift();
+    } else {
+      list[index] = event.target.value;
+    }
     setTodo(list);
   };
 
@@ -24,6 +28,7 @@ export default function TodoList({ data, completeList, setComplete, todoList, se
         flex-direction: column;
         row-gap: 1.5rem;
       `}
+      ref={ref}
     >
       {data.map((item, index) => {
         // TODO: 텍스트 클릭 시에 INPUT 태그로 나오도록 수정
@@ -45,11 +50,14 @@ export default function TodoList({ data, completeList, setComplete, todoList, se
               }}
             />
             <Fragment>
-              <Input value={item} placeholder="아젠다를 입력해주세요" onBlur={(event) => changeNewData(event, index)} />
+              <Input id="todo" value={item} placeholder="아젠다를 입력해주세요" onBlur={(event) => changeNewData(event, index)} />
             </Fragment>
           </div>
         );
       })}
     </div>
   );
-}
+});
+
+TodoList.displayName = "TodoList";
+export default TodoList;
