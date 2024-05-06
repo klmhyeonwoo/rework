@@ -15,6 +15,7 @@ export default function Input({ value, placeholder, ...props }: inputProps) {
         border: none;
         color: ${DESIGN_SYSTEM_COLOR.grey700};
         background: transparent;
+        width: 80%;
 
         &:focus {
           outline: none;

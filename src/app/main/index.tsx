@@ -14,11 +14,12 @@ import Add from "@/assets/img/add.svg?react";
 import Performence from "@/component/main/Performence.tsx";
 import TodoList from "@/component/main/TodoList.tsx";
 import CompleteList from "@/component/main/CompleteList.tsx";
+import Input from "@/component/main/Input.tsx";
 
 export default function Main() {
   const [chapter, setChapter] = useState(0);
-  const [complete, setComplete] = useState(["인프콘 컴퍼런스 참가"]);
-  const [todo, setTodo] = useState(["데브챗 참가", "우아콘 컨퍼런스 참가"]);
+  const [complete, setComplete] = useState<string[]>([]);
+  const [todo, setTodo] = useState<string[]>([]);
   const scaledDateNumber = (number: number) => {
     if (number < 10) {
       return `0${number}`;
@@ -33,6 +34,7 @@ export default function Main() {
   const day = scaledDateNumber(dateObj.getDate());
   const GRAPHIC_LIST = [gear3D, glass3D, secondGlass3D, light3D, molecule3D];
   const key = useRef(Math.floor(Math.random() * GRAPHIC_LIST.length));
+  const todoRef = useRef(null);
 
   useEffect(() => {
     /** 오늘의 첫 방문이라면 웰컴 멘트를 제공하고, 이러한 상황이 아니라면 기존 스토리지에 값을 조회하여 멘트 제공에 대한 판단을 진행합니다. */
@@ -56,6 +58,13 @@ export default function Main() {
       return () => clearInterval(counter);
     }
   }, [chapter]);
+
+  useEffect(() => {
+    if (todoRef.current) {
+      const input = (todoRef.current as HTMLDivElement)?.querySelector("#todo") as HTMLInputElement;
+      if (input && input.value === "") input.focus();
+    }
+  }, [todo]);
 
   return (
     <section
@@ -131,7 +140,7 @@ export default function Main() {
                 />
               }
             >
-              <TodoList data={todo} completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} />
+              <TodoList data={todo} completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} ref={todoRef} />
             </ContentBox>
             <ContentBox title="오늘의 캘린더" subscribe="내가 기록한 아젠다 아카이빙을 확인해보세요" />
             <ContentBox title="완료된 아젠다" subscribe="오늘 내가 완료한 아젠다를 확인할 수 있어요" length={complete.length}>
@@ -154,13 +163,13 @@ export default function Main() {
                   height: auto;
                 `}
               />
-              <span
+              <Input
+                value={"성공적인 웹 개발 기초 쌓기"}
                 css={css`
                   font-size: 1.5rem;
+                  text-align: center;
                 `}
-              >
-                성공적인 웹 개발 기초 쌓기
-              </span>
+              />
             </ContentBox>
           </div>
           <ContentBox

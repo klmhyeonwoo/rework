@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import RightArrow from "@/assets/img/right-arrow.svg?react";
 import LeftArrow from "@/assets/img/left-arrow.svg?react";
+import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
 
 interface dayProps {
   year: number | string;
@@ -26,6 +27,7 @@ export default function DateSection({ year, month, day, ...props }: dayProps) {
       <div
         css={css`
           font-size: 2.5rem;
+          color: ${DESIGN_SYSTEM_COLOR.newBlack};
         `}
       >
         {year}년 {month}월 {day}일
