@@ -20,13 +20,19 @@ import "react-calendar/dist/Calendar.css";
 import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
 import moment from "moment";
 import "moment/locale/ko";
+import { Beforeunload } from "react-beforeunload";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
+export interface agendaProps {
+  id: number;
+  content: string;
+}
 export default function Main() {
   const [chapter, setChapter] = useState(0);
-  const [complete, setComplete] = useState<string[]>([]);
-  const [todo, setTodo] = useState<string[]>([]);
+  const [complete, setComplete] = useState<agendaProps[]>([]);
+  const [todo, setTodo] = useState<agendaProps[]>([]);
+  const [focus, setFocus] = useState(false);
   const scaledDateNumber = (number: number) => {
     if (number < 10) {
       return `0${number}`;
@@ -67,172 +73,184 @@ export default function Main() {
   }, [chapter]);
 
   useEffect(() => {
+    console.log(todo);
     if (todoRef.current) {
-      const input = (todoRef.current as HTMLDivElement)?.querySelector("#todo") as HTMLInputElement;
-      if (input && input.value === "") input.focus();
+      const inputNodes = (todoRef.current as HTMLDivElement)?.querySelectorAll("#todo");
+      for (let i = 0; i < inputNodes.length; i++) {
+        const input = inputNodes[i] as HTMLInputElement;
+        if (input.value === "") {
+          setFocus(true);
+          return input.focus();
+        }
+      }
+      setFocus(false);
     }
   }, [todo]);
 
   return (
-    <section
-      css={css`
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        row-gap: 3.5rem;
+    <>
+      {todo.length + complete.length > 0 && <Beforeunload onBeforeunload={(event: BeforeUnloadEvent) => event.preventDefault()} />}
+      <section
+        css={css`
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          row-gap: 3.5rem;
 
-        width: 90rem;
-        margin: 0 auto;
-        padding: 6rem;
-      `}
-    >
-      {/* TODO: 메인 페이지 구성 필요 */}
-      {/*<Input value={""} placeholder={"오늘을 기록해보세요"} css={css`*/}
-      {/*  animation: ${fadeUp} .6s;*/}
-      {/*`}/>*/}
+          width: 90rem;
+          margin: 0 auto;
+          padding: 6rem;
+        `}
+      >
+        {/* TODO: 메인 페이지 구성 필요 */}
+        {/*<Input value={""} placeholder={"오늘을 기록해보세요"} css={css`*/}
+        {/*  animation: ${fadeUp} .6s;*/}
+        {/*`}/>*/}
 
-      {/* chapter 값이 3 이상일 때 사용이 되며, 렌더링 됩니다. */}
-      {chapter >= 3 && (
-        <article
-          css={css`
-            width: 100%;
-            animation: ${fadeIn} 0.7s;
-          `}
-        >
-          {/*<Logo*/}
-          {/*  width={50}*/}
-          {/*  height={50}*/}
-          {/*  css={css`*/}
-          {/*    animation: ${fadeUp} 0.4s;*/}
-          {/*    transform: ${chapter === 3 && `translateY(0)`};*/}
-          {/*    transition: 0.4s all;*/}
-          {/*  `}*/}
-          {/*/>*/}
-          <DateSection
-            year={year}
-            month={month}
-            day={day}
+        {/* chapter 값이 3 이상일 때 사용이 되며, 렌더링 됩니다. */}
+        {chapter >= 3 && (
+          <article
             css={css`
-              margin-bottom: 6.2rem;
-            `}
-          />
-          <div
-            css={css`
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              column-gap: 2.2rem;
-              row-gap: 3.1rem;
+              width: 100%;
+              animation: ${fadeIn} 0.7s;
             `}
           >
-            <ContentBox
-              title="오늘의 아젠다"
-              length={todo.length}
-              subscribe="오늘의 아젠다를 선정하고 성장해보세요"
-              util={
-                <Add
-                  css={css`
-                    margin-left: auto;
-                    cursor: pointer;
-                  `}
-                  width={20}
-                  height={20}
-                  onClick={() => {
-                    if (todo[0] !== "") {
-                      setTodo(["", ...todo]);
-                    } else {
-                      setTodo(todo.filter((todo) => todo !== ""));
-                    }
-                  }}
-                />
-              }
-            >
-              <TodoList data={todo} completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} ref={todoRef} />
-            </ContentBox>
-            <ContentBox title="오늘의 캘린더" subscribe="내가 기록한 아젠다 아카이빙을 확인해보세요">
-              <Calendar
-                css={css`
-                  width: 100% !important;
-                  height: 100% !important;
-                  border: none !important;
-
-                  .react-calendar__tile--active {
-                    background: ${DESIGN_SYSTEM_COLOR.newBlack} !important;
-                    color: white;
-                  }
-
-                  .react-calendar__navigation button:disabled,
-                  .react-calendar__tile:disabled,
-                  .react-calendar__tile--now,
-                  .react-calendar__tile--active:enabled:hover,
-                  .react-calendar__tile--active:enabled:focus,
-                  .react-calendar__tile:enabled:hover,
-                  .react-calendar__tile:enabled:focus,
-                  .react-calendar__navigation button:enabled:hover,
-                  .react-calendar__navigation button:enabled:focus {
-                    background: transparent;
-                  }
-
-                  .react-calendar__navigation__prev2-button,
-                  .react-calendar__navigation__next2-button {
-                    display: none;
-                  }
-
-                  abbr[title] {
-                    text-decoration: none;
-                    font-weight: 400;
-                  }
-                `}
-                showNeighboringMonth={false}
-                maxDate={moment().toDate()}
-                value={dateObj}
-                onChange={setDate}
-              />
-            </ContentBox>
-            <ContentBox title="완료된 아젠다" subscribe="오늘 내가 완료한 아젠다를 확인할 수 있어요" length={complete.length}>
-              <CompleteList data={complete} completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} />
-            </ContentBox>
-            <ContentBox
-              title="이번 달 아젠다"
-              subscribe="내가 선정한 이번 달 아젠다를 확인할 수 있어요"
+            {/*<Logo*/}
+            {/*  width={50}*/}
+            {/*  height={50}*/}
+            {/*  css={css`*/}
+            {/*    animation: ${fadeUp} 0.4s;*/}
+            {/*    transform: ${chapter === 3 && `translateY(0)`};*/}
+            {/*    transition: 0.4s all;*/}
+            {/*  `}*/}
+            {/*/>*/}
+            <DateSection
+              year={year}
+              month={month}
+              day={day}
               css={css`
-                justify-content: center;
-                align-items: center;
+                margin-bottom: 6.2rem;
+              `}
+            />
+            <div
+              css={css`
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 2.2rem;
                 row-gap: 3.1rem;
-                padding: 4.8rem;
               `}
             >
-              <img
-                src={GRAPHIC_LIST[key.current]}
+              <ContentBox
+                title="오늘의 아젠다"
+                length={todo.length}
+                subscribe="오늘의 아젠다를 선정하고 성장해보세요"
+                util={
+                  <Add
+                    css={css`
+                      margin-left: auto;
+                      cursor: pointer;
+                      pointer-events: ${focus && "none"};
+                    `}
+                    width={20}
+                    height={20}
+                    onClick={() => {
+                      if (todo.length < 1 || todo[0].content !== "") {
+                        setTodo([{ id: todo.length + complete.length, content: "" }, ...todo]);
+                      } else {
+                        setTodo(todo.filter((todo) => todo.content !== ""));
+                      }
+                    }}
+                  />
+                }
+              >
+                <TodoList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} ref={todoRef} />
+              </ContentBox>
+              <ContentBox title="오늘의 캘린더" subscribe="내가 기록한 아젠다 아카이빙을 확인해보세요">
+                <Calendar
+                  css={css`
+                    width: 100% !important;
+                    height: 100% !important;
+                    border: none !important;
+
+                    .react-calendar__tile--active {
+                      background: ${DESIGN_SYSTEM_COLOR.newBlack} !important;
+                      color: white;
+                    }
+
+                    .react-calendar__navigation button:disabled,
+                    .react-calendar__tile:disabled,
+                    .react-calendar__tile--now,
+                    .react-calendar__tile--active:enabled:hover,
+                    .react-calendar__tile--active:enabled:focus,
+                    .react-calendar__tile:enabled:hover,
+                    .react-calendar__tile:enabled:focus,
+                    .react-calendar__navigation button:enabled:hover,
+                    .react-calendar__navigation button:enabled:focus {
+                      background: transparent;
+                    }
+
+                    .react-calendar__navigation__prev2-button,
+                    .react-calendar__navigation__next2-button {
+                      display: none;
+                    }
+
+                    abbr[title] {
+                      text-decoration: none;
+                      font-weight: 400;
+                    }
+                  `}
+                  showNeighboringMonth={false}
+                  maxDate={moment().toDate()}
+                  value={dateObj}
+                  onChange={setDate}
+                />
+              </ContentBox>
+              <ContentBox title="완료된 아젠다" subscribe="오늘 내가 완료한 아젠다를 확인할 수 있어요" length={complete.length}>
+                <CompleteList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} />
+              </ContentBox>
+              <ContentBox
+                title="이번 달 아젠다"
+                subscribe="내가 선정한 이번 달 아젠다를 확인할 수 있어요"
                 css={css`
-                  width: 10rem;
-                  height: auto;
+                  justify-content: center;
+                  align-items: center;
+                  row-gap: 3.1rem;
+                  padding: 4.8rem;
                 `}
-              />
-              <Input
-                value={"성공적인 웹 개발 기초 쌓기"}
-                css={css`
-                  font-size: 1.5rem;
-                  text-align: center;
-                `}
-              />
+              >
+                <img
+                  src={GRAPHIC_LIST[key.current]}
+                  css={css`
+                    width: 10rem;
+                    height: auto;
+                  `}
+                />
+                <Input
+                  value={"프론트엔드 개발자로 한층 더 성장하기"}
+                  css={css`
+                    font-size: 1.5rem;
+                    text-align: center;
+                  `}
+                />
+              </ContentBox>
+            </div>
+            <ContentBox
+              title="이번 달 성과 요약"
+              subscribe="작성한 내용을 기반으로 AI가 요약한 성과 정보를 알려드려요"
+              css={css`
+                border: none;
+                padding: 0;
+                box-shadow: none;
+              `}
+            >
+              <Performence />
             </ContentBox>
-          </div>
-          <ContentBox
-            title="이번 달 성과 요약"
-            subscribe="작성한 내용을 기반으로 AI가 요약한 성과 정보를 알려드려요"
-            css={css`
-              border: none;
-              padding: 0;
-              box-shadow: none;
-            `}
-          >
-            <Performence />
-          </ContentBox>
-        </article>
-      )}
-      {/* chapter 값이 3 미만일 때만 사용이 되고, 그 외에는 렌더링되지 않습니다. */}
-      <WelcomMenting chapter={chapter} month={month} day={day} />
-    </section>
+          </article>
+        )}
+        {/* chapter 값이 3 미만일 때만 사용이 되고, 그 외에는 렌더링되지 않습니다. */}
+        <WelcomMenting chapter={chapter} month={month} day={day} />
+      </section>
+    </>
   );
 }

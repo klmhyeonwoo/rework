@@ -1,22 +1,23 @@
 import { css } from "@emotion/react";
 import Checkbox from "@/assets/img/empty-box.svg?react";
-import React, { Dispatch, forwardRef, Fragment, SetStateAction } from "react";
+import { Dispatch, forwardRef, Fragment, SetStateAction } from "react";
 import Input from "@/component/main/Input.tsx";
+import { agendaProps } from "@/app/main";
 
 interface listProps {
-  data: string[];
-  todoList: string[];
-  setTodo: Dispatch<SetStateAction<string[]>>;
-  completeList: string[];
-  setComplete: Dispatch<SetStateAction<string[]>>;
+  todoList: agendaProps[];
+  setTodo: Dispatch<SetStateAction<agendaProps[]>>;
+  completeList: agendaProps[];
+  setComplete: Dispatch<SetStateAction<agendaProps[]>>;
 }
-const TodoList = forwardRef(({ data, completeList, setComplete, todoList, setTodo }: listProps, ref: React.Ref<HTMLDivElement>) => {
+
+const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: listProps, ref: React.Ref<HTMLDivElement>) => {
   const changeNewData = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const list = [...todoList];
     if (event.target.value === "") {
-      list.shift();
+      list.splice(index, 1);
     } else {
-      list[index] = event.target.value;
+      list[index].content = event.target.value;
     }
     setTodo(list);
   };
@@ -30,11 +31,11 @@ const TodoList = forwardRef(({ data, completeList, setComplete, todoList, setTod
       `}
       ref={ref}
     >
-      {data.map((item, index) => {
+      {todoList.map((item, index) => {
         // TODO: 텍스트 클릭 시에 INPUT 태그로 나오도록 수정
         return (
           <div
-            key={item}
+            key={item.id}
             css={css`
               display: flex;
               align-items: center;
@@ -50,7 +51,21 @@ const TodoList = forwardRef(({ data, completeList, setComplete, todoList, setTod
               }}
             />
             <Fragment>
-              <Input id="todo" value={item} placeholder="아젠다를 입력해주세요" onBlur={(event) => changeNewData(event, index)} />
+              <Input
+                id="todo"
+                value={item.content}
+                placeholder="아젠다를 입력해주세요"
+                onBlur={(event) => changeNewData(event, index)}
+                onKeyUp={(event) => {
+                  if (event.key === "Enter") {
+                    const list = [...todoList];
+                    if ((event.target as HTMLInputElement).value !== "") {
+                      list.splice(index + 1, 0, { id: todoList.length + completeList.length, content: "" });
+                      setTodo(list);
+                    }
+                  }
+                }}
+              />
             </Fragment>
           </div>
         );
