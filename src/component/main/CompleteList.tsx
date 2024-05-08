@@ -2,15 +2,15 @@ import { css } from "@emotion/react";
 import Checkbox from "@/assets/img/checked-box.svg?react";
 import { Dispatch, SetStateAction } from "react";
 import Input from "@/component/main/Input.tsx";
+import { agendaProps } from "@/app/main";
 
 interface listProps {
-  data: string[];
-  todoList: string[];
-  setTodo: Dispatch<SetStateAction<string[]>>;
-  completeList: string[];
-  setComplete: Dispatch<SetStateAction<string[]>>;
+  todoList: agendaProps[];
+  setTodo: Dispatch<SetStateAction<agendaProps[]>>;
+  completeList: agendaProps[];
+  setComplete: Dispatch<SetStateAction<agendaProps[]>>;
 }
-export default function CompleteList({ data, completeList, setComplete, todoList, setTodo }: listProps) {
+export default function CompleteList({ completeList, setComplete, todoList, setTodo }: listProps) {
   return (
     <div
       css={css`
@@ -19,10 +19,10 @@ export default function CompleteList({ data, completeList, setComplete, todoList
         row-gap: 1.5rem;
       `}
     >
-      {data.map((item) => {
+      {completeList.map((item) => {
         return (
           <div
-            key={item}
+            key={item.id}
             css={css`
               display: flex;
               align-items: center;
@@ -37,7 +37,7 @@ export default function CompleteList({ data, completeList, setComplete, todoList
                 setTodo([item, ...todoList]);
               }}
             />
-            <Input value={item} disabled />
+            <Input value={item.content} disabled />
           </div>
         );
       })}
