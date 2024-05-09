@@ -1,8 +1,9 @@
 import { css } from "@emotion/react";
 import Checkbox from "@/assets/img/empty-box.svg?react";
-import { Dispatch, forwardRef, Fragment, SetStateAction } from "react";
+import { Dispatch, forwardRef, SetStateAction } from "react";
 import Input from "@/component/main/Input.tsx";
 import { agendaProps } from "@/app/main";
+import Trash from "@/assets/img/trash.svg?react";
 
 interface listProps {
   todoList: agendaProps[];
@@ -50,7 +51,19 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
                 setTodo(todoList.filter((todo) => todo !== item));
               }}
             />
-            <Fragment>
+            <div
+              css={css`
+                width: 100%;
+                display: flex;
+                align-items: center;
+
+                &:hover {
+                  #trash {
+                    display: inline;
+                  }
+                }
+              `}
+            >
               <Input
                 id="todo"
                 value={item.content}
@@ -66,7 +79,20 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
                   }
                 }}
               />
-            </Fragment>
+              <Trash
+                id="trash"
+                width={15}
+                height={15}
+                css={css`
+                  margin-left: auto;
+                  display: none;
+                  cursor: pointer;
+                `}
+                onClick={() => {
+                  setTodo(todoList.filter((todo) => todo !== item));
+                }}
+              />
+            </div>
           </div>
         );
       })}
