@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { fadeIn } from "@/style/keyframe.ts";
 import WelcomMenting from "@/component/main/WelcomeMenting.tsx";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import DateSection from "@/component/main/DateSection.tsx";
 import ContentBox from "@/component/common/ContentBox.tsx";
 import gear3D from "@/assets/3d/agenda/gear.gif";
@@ -88,7 +88,7 @@ export default function Main() {
   }, [todo]);
 
   return (
-    <>
+    <Fragment>
       {todo.length + complete.length > 0 && <Beforeunload onBeforeunload={(event: BeforeUnloadEvent) => event.preventDefault()} />}
       <section
         css={css`
@@ -104,11 +104,6 @@ export default function Main() {
         `}
       >
         {/* TODO: 메인 페이지 구성 필요 */}
-        {/*<Input value={""} placeholder={"오늘을 기록해보세요"} css={css`*/}
-        {/*  animation: ${fadeUp} .6s;*/}
-        {/*`}/>*/}
-
-        {/* chapter 값이 3 이상일 때 사용이 되며, 렌더링 됩니다. */}
         {chapter >= 3 && (
           <article
             css={css`
@@ -119,15 +114,6 @@ export default function Main() {
               row-gap: 7rem;
             `}
           >
-            {/*<Logo*/}
-            {/*  width={50}*/}
-            {/*  height={50}*/}
-            {/*  css={css`*/}
-            {/*    animation: ${fadeUp} 0.4s;*/}
-            {/*    transform: ${chapter === 3 && `translateY(0)`};*/}
-            {/*    transition: 0.4s all;*/}
-            {/*  `}*/}
-            {/*/>*/}
             <DateSection year={year} month={month} day={day} date={dateObj} setDate={setDate} />
             <div
               css={css`
@@ -247,6 +233,6 @@ export default function Main() {
         {/* chapter 값이 3 미만일 때만 사용이 되고, 그 외에는 렌더링되지 않습니다. */}
         <WelcomMenting chapter={chapter} month={month} day={day} />
       </section>
-    </>
+    </Fragment>
   );
 }
