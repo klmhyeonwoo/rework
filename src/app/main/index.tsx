@@ -53,7 +53,7 @@ export default function Main() {
     /** 오늘의 첫 방문이라면 웰컴 멘트를 제공하고, 이러한 상황이 아니라면 기존 스토리지에 값을 조회하여 멘트 제공에 대한 판단을 진행합니다. */
     const REWORK_VISTED = localStorage.getItem("REWORK_VISITED");
     if (REWORK_VISTED) {
-      if (REWORK_VISTED !== day) {
+      if (REWORK_VISTED !== String(day)) {
         localStorage.removeItem("REWORK_VISITED");
       } else {
         setChapter(3);
@@ -114,6 +114,9 @@ export default function Main() {
             css={css`
               width: 100%;
               animation: ${fadeIn} 0.7s;
+              display: flex;
+              flex-direction: column;
+              row-gap: 7rem;
             `}
           >
             {/*<Logo*/}
@@ -125,14 +128,7 @@ export default function Main() {
             {/*    transition: 0.4s all;*/}
             {/*  `}*/}
             {/*/>*/}
-            <DateSection
-              year={year}
-              month={month}
-              day={day}
-              css={css`
-                margin-bottom: 6.2rem;
-              `}
-            />
+            {/*<DateSection year={year} month={month} day={day} />*/}
             <div
               css={css`
                 display: grid;
