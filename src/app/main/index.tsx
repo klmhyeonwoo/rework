@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { fadeIn } from "@/style/keyframe.ts";
 import WelcomMenting from "@/component/main/WelcomeMenting.tsx";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import DateSection from "@/component/main/DateSection.tsx";
 import ContentBox from "@/component/common/ContentBox.tsx";
 import gear3D from "@/assets/3d/agenda/gear.gif";
@@ -22,8 +22,8 @@ import moment from "moment";
 import "moment/locale/ko";
 import { Beforeunload } from "react-beforeunload";
 
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+export type ValuePiece = Date | null;
+export type Value = ValuePiece | [ValuePiece, ValuePiece];
 export interface agendaProps {
   id: number;
   content: string;
@@ -53,7 +53,7 @@ export default function Main() {
     /** 오늘의 첫 방문이라면 웰컴 멘트를 제공하고, 이러한 상황이 아니라면 기존 스토리지에 값을 조회하여 멘트 제공에 대한 판단을 진행합니다. */
     const REWORK_VISTED = localStorage.getItem("REWORK_VISITED");
     if (REWORK_VISTED) {
-      if (REWORK_VISTED !== day) {
+      if (REWORK_VISTED !== String(day)) {
         localStorage.removeItem("REWORK_VISITED");
       } else {
         setChapter(3);
@@ -88,7 +88,7 @@ export default function Main() {
   }, [todo]);
 
   return (
-    <>
+    <Fragment>
       {todo.length + complete.length > 0 && <Beforeunload onBeforeunload={(event: BeforeUnloadEvent) => event.preventDefault()} />}
       <section
         css={css`
@@ -104,35 +104,17 @@ export default function Main() {
         `}
       >
         {/* TODO: 메인 페이지 구성 필요 */}
-        {/*<Input value={""} placeholder={"오늘을 기록해보세요"} css={css`*/}
-        {/*  animation: ${fadeUp} .6s;*/}
-        {/*`}/>*/}
-
-        {/* chapter 값이 3 이상일 때 사용이 되며, 렌더링 됩니다. */}
         {chapter >= 3 && (
           <article
             css={css`
               width: 100%;
               animation: ${fadeIn} 0.7s;
+              display: flex;
+              flex-direction: column;
+              row-gap: 7rem;
             `}
           >
-            {/*<Logo*/}
-            {/*  width={50}*/}
-            {/*  height={50}*/}
-            {/*  css={css`*/}
-            {/*    animation: ${fadeUp} 0.4s;*/}
-            {/*    transform: ${chapter === 3 && `translateY(0)`};*/}
-            {/*    transition: 0.4s all;*/}
-            {/*  `}*/}
-            {/*/>*/}
-            <DateSection
-              year={year}
-              month={month}
-              day={day}
-              css={css`
-                margin-bottom: 6.2rem;
-              `}
-            />
+            <DateSection year={year} month={month} day={day} date={dateObj} setDate={setDate} />
             <div
               css={css`
                 display: grid;
@@ -251,6 +233,6 @@ export default function Main() {
         {/* chapter 값이 3 미만일 때만 사용이 되고, 그 외에는 렌더링되지 않습니다. */}
         <WelcomMenting chapter={chapter} month={month} day={day} />
       </section>
-    </>
+    </Fragment>
   );
 }

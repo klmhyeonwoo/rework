@@ -43,6 +43,7 @@ export default function ContentBox({ title, subscribe, length, children, util, .
           display: flex;
           flex-direction: column;
           width: 100%;
+          height: 100%;
           box-shadow: inset 0 0 0 1px ${DESIGN_SYSTEM_COLOR.greyOpacity200};
           border-radius: 0.8rem;
           overflow-y: auto;
