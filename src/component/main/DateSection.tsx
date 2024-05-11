@@ -21,7 +21,7 @@ export default function DateSection({ year, month, day, date, setDate, ...props 
     const newDate = new Date(day.getTime());
 
     if (method === DATE_METHOD[0]) newDate.setDate(day.getDate() - 1);
-    if (method === DATE_METHOD[1]) newDate.getDate() < today.getDate() && newDate.setDate(day.getDate() + 1);
+    if (method === DATE_METHOD[1]) newDate.getDate() + 1 < today.getDate() && newDate.setDate(day.getDate() + 1);
     return newDate;
   };
 
