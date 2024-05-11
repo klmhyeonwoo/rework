@@ -22,8 +22,8 @@ import moment from "moment";
 import "moment/locale/ko";
 import { Beforeunload } from "react-beforeunload";
 
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+export type ValuePiece = Date | null;
+export type Value = ValuePiece | [ValuePiece, ValuePiece];
 export interface agendaProps {
   id: number;
   content: string;
@@ -128,7 +128,7 @@ export default function Main() {
             {/*    transition: 0.4s all;*/}
             {/*  `}*/}
             {/*/>*/}
-            <DateSection year={year} month={month} day={day} />
+            <DateSection year={year} month={month} day={day} date={dateObj} setDate={setDate} />
             <div
               css={css`
                 display: grid;
