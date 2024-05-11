@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import RightArrow from "@/assets/img/right-arrow.svg?react";
 import LeftArrow from "@/assets/img/left-arrow.svg?react";
 import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { Value } from "@/app/main";
 
 interface dayProps {
@@ -14,15 +14,18 @@ interface dayProps {
 }
 export default function DateSection({ year, month, day, date, setDate, ...props }: dayProps) {
   const DATE_METHOD = ["MINUS", "PLUS"];
+  const today = useRef(new Date((date as Date).getTime()));
   const changeDate = (method: string) => {
-    const today = new Date();
-
     const day = new Date((date as Date).getTime());
-    const newDate = new Date(day.getTime());
+    const yesterDay = new Date(day.getTime());
+    yesterDay.setDate(day.getDate() - 1);
+    const nextDay = new Date(day.getTime());
+    nextDay.setDate(day.getDate() + 1);
 
-    if (method === DATE_METHOD[0]) newDate.setDate(day.getDate() - 1);
-    if (method === DATE_METHOD[1]) newDate.getDate() + 1 < today.getDate() && newDate.setDate(day.getDate() + 1);
-    return newDate;
+    if (method === DATE_METHOD[0]) return yesterDay;
+    if (method === DATE_METHOD[1] && today.current.getTime() > (date as Date).getTime()) return nextDay;
+
+    return day;
   };
 
   return (
@@ -31,6 +34,7 @@ export default function DateSection({ year, month, day, date, setDate, ...props 
         width: 100%;
         display: flex;
         align-items: center;
+        user-select: none;
       `}
       {...props}
     >
