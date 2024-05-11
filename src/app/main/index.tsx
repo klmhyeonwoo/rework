@@ -128,7 +128,7 @@ export default function Main() {
             {/*    transition: 0.4s all;*/}
             {/*  `}*/}
             {/*/>*/}
-            {/*<DateSection year={year} month={month} day={day} />*/}
+            <DateSection year={year} month={month} day={day} />
             <div
               css={css`
                 display: grid;
