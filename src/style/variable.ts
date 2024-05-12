@@ -124,6 +124,7 @@ export const DESIGN_SYSTEM_COLOR = {
   darkFloatBackground: "#2c2c35",
   black: "#000",
   newBlack: "#222222",
+  kreamBlack: "#333333",
   grey50: "#f9fafb",
   grey100: "#f2f4f6",
   grey200: "#e5e8eb",

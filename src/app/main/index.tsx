@@ -4,12 +4,18 @@ import WelcomMenting from "@/component/main/WelcomeMenting.tsx";
 import { Fragment, useEffect, useRef, useState } from "react";
 import DateSection from "@/component/main/DateSection.tsx";
 import ContentBox from "@/component/common/ContentBox.tsx";
-import gear3D from "@/assets/3d/agenda/gear.gif";
-import glass3D from "@/assets/3d/agenda/glass.gif";
-import secondGlass3D from "@/assets/3d/agenda/glass2.gif";
+
+import sphere3D from "@/assets/3d/agenda/sphere.gif";
 import light3D from "@/assets/3d/agenda/light.gif";
-import molecule3D from "@/assets/3d/agenda/molecule.gif";
 import Add from "@/assets/img/add.svg?react";
+
+// import ball from "@/assets/3d/character/ball.png";
+// import creature from "@/assets/3d/character/creature.png";
+// import donut from "@/assets/3d/character/donut.png";
+// import flower from "@/assets/3d/character/flower.png";
+// import fuzz from "@/assets/3d/character/fuzz.png";
+// import heart from "@/assets/3d/character/heart.png";
+// import star from "@/assets/3d/character/star.png";
 
 import Performence from "@/component/main/Performence.tsx";
 import TodoList from "@/component/main/TodoList.tsx";
@@ -21,6 +27,7 @@ import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
 import moment from "moment";
 import "moment/locale/ko";
 import { Beforeunload } from "react-beforeunload";
+import NotDataWithContentBox from "@/component/common/NotDataWithContentBox.tsx";
 
 export type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -45,7 +52,9 @@ export default function Main() {
   const year = scaledDateNumber((dateObj as Date).getFullYear());
   const month = scaledDateNumber((dateObj as Date).getMonth() + 1);
   const day = scaledDateNumber((dateObj as Date).getDate());
-  const GRAPHIC_LIST = [gear3D, glass3D, secondGlass3D, light3D, molecule3D];
+
+  const GRAPHIC_LIST = [sphere3D, light3D];
+  // const CHARACTER_LIST = [ball, creature, donut, flower, fuzz, heart, star];
   const key = useRef(Math.floor(Math.random() * GRAPHIC_LIST.length));
   const todoRef = useRef(null);
 
@@ -146,7 +155,11 @@ export default function Main() {
                   />
                 }
               >
-                <TodoList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} ref={todoRef} />
+                {todo.length ? (
+                  <TodoList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} ref={todoRef} />
+                ) : (
+                  <NotDataWithContentBox> 오늘 생성된 아젠다가 존재하지 않습니다 </NotDataWithContentBox>
+                )}
               </ContentBox>
               <ContentBox title="오늘의 캘린더" subscribe="내가 기록한 아젠다 아카이빙을 확인해보세요">
                 <Calendar
@@ -189,7 +202,11 @@ export default function Main() {
                 />
               </ContentBox>
               <ContentBox title="완료된 아젠다" subscribe="오늘 내가 완료한 아젠다를 확인할 수 있어요" length={complete.length}>
-                <CompleteList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} />
+                {complete.length ? (
+                  <CompleteList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} />
+                ) : (
+                  <NotDataWithContentBox> 아직 완료된 아젠다가 존재하지 않습니다 </NotDataWithContentBox>
+                )}
               </ContentBox>
               <ContentBox
                 title="이번 달 아젠다"
@@ -209,7 +226,7 @@ export default function Main() {
                   `}
                 />
                 <Input
-                  value={"프론트엔드 개발자로 한층 더 성장하기"}
+                  value={"팀 리워크의 1차 MVP 런칭"}
                   css={css`
                     font-size: 1.5rem;
                     text-align: center;

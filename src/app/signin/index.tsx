@@ -89,7 +89,7 @@ export default function SignIn() {
             transform: ${PW_CHECK ? "translateY(-20px)" : ""};
           `}
         >
-          <Input name="ID" value={ID} placeholder={"계정 정보를 입력해주세요"} onChange={(e) => handleChange(e)} />
+          <Input name="ID" value={ID} placeholder={"사용하고 계신 이메일을 입력해주세요"} onChange={(e) => handleChange(e)} />
           <Input
             css={css`
               display: ${ID_CHECK ? "flex" : "none"};
@@ -117,7 +117,7 @@ export default function SignIn() {
         css={css`
           display: flex;
           flex-direction: column;
-          background: #333333;
+          background: ${DESIGN_SYSTEM_COLOR.kreamBlack};
           width: 40rem;
           border-radius: 7px;
           justify-content: center;

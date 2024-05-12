@@ -55,6 +55,7 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
                 css={css`
                   display: flex;
                   flex-direction: column;
+                  margin-left: -2.9rem;
                 `}
               >
                 {todoList.map((item, index) => {
@@ -69,7 +70,7 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
                             display: flex;
                             align-items: center;
                             column-gap: 0.8rem;
-                            padding: 0.7rem 0 0.7rem 0;
+                            padding: 0.7rem 0 0.7rem 2.9rem;
                             position: relative;
 
                             &:hover {
@@ -89,8 +90,8 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
                             css={css`
                               display: none;
                               width: 1.1rem;
-                              //position: absolute;
-                              //left: -1.7rem;
+                              position: absolute;
+                              left: 1rem;
                             `}
                           />
                           <Checkbox
