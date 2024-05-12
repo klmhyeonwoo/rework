@@ -67,18 +67,18 @@ export default function Main() {
       } else {
         setChapter(3);
       }
-    } else {
-      const counter = setInterval(() => {
-        setChapter((chapter) => chapter + 1);
-      }, 2500);
-
-      if (chapter === 3) {
-        clearInterval(counter);
-        localStorage.setItem("REWORK_VISITED", day as string);
-      }
-
-      return () => clearInterval(counter);
     }
+
+    const counter = setInterval(() => {
+      setChapter((chapter) => chapter + 1);
+    }, 2500);
+
+    if (chapter === 3) {
+      clearInterval(counter);
+      localStorage.setItem("REWORK_VISITED", day as string);
+    }
+
+    return () => clearInterval(counter);
   }, [chapter]);
 
   useEffect(() => {
