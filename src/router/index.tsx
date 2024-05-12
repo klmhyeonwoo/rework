@@ -1,8 +1,8 @@
-import { Fragment } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "@/app/main";
 import DefaultLayout from "@/layout/default.tsx";
 import SignIn from "@/app/signin";
+import Error from "@/app/error/404.tsx";
 
 const routerChildren = [
   {
@@ -13,13 +13,17 @@ const routerChildren = [
     path: "/",
     element: <SignIn />,
   },
+  {
+    path: "*",
+    element: <Error />,
+  },
 ];
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <DefaultLayout />,
-    errorElement: <Fragment />,
+    errorElement: <Error />,
     children: routerChildren,
   },
 ]);

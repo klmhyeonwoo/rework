@@ -15,6 +15,7 @@ export default function ContentBox({ title, subscribe, length, children, util, .
         display: flex;
         flex-direction: column;
         row-gap: 1.2rem;
+        position: relative;
       `}
     >
       <div
@@ -49,6 +50,8 @@ export default function ContentBox({ title, subscribe, length, children, util, .
           overflow-y: auto;
           padding: 2.9rem;
           box-sizing: border-box;
+          min-height: 30rem;
+          transition: 0.4s all;
         `}
         {...props}
       >
