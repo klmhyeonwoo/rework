@@ -5,8 +5,7 @@ import Input from "@/component/main/Input.tsx";
 import { agendaProps } from "@/app/main";
 import Trash from "@/assets/img/trash.svg?react";
 import line from "@/assets/img/line.svg";
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import { useStrictDroppable } from "@/hooks/useStrictDroppable.ts";
+import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 
 interface listProps {
   todoList: agendaProps[];
@@ -16,7 +15,6 @@ interface listProps {
 }
 
 const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: listProps, ref: React.Ref<HTMLDivElement>) => {
-  const [enabled] = useStrictDroppable(false);
   const changeNewData = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const list = [...todoList];
     if (event.target.value === "") {
@@ -46,7 +44,7 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {enabled && (
+      {
         <Droppable droppableId={"fields"}>
           {(provided) => (
             <div id="fields" ref={provided.innerRef} {...provided.droppableProps}>
@@ -150,7 +148,7 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
             </div>
           )}
         </Droppable>
-      )}
+      }
     </DragDropContext>
   );
 });
