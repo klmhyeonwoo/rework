@@ -82,7 +82,6 @@ export default function Main() {
   }, [chapter]);
 
   useEffect(() => {
-    console.log(todo);
     if (todoRef.current) {
       const inputNodes = (todoRef.current as HTMLDivElement)?.querySelectorAll("#todo");
       for (let i = 0; i < inputNodes.length; i++) {
