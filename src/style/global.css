@@ -1,5 +1,5 @@
-:root {
-  font-family: Pretendard;
+:root, button, input, textarea {
+  font-family: Pretendard !important;
 }
 
 html {
@@ -8,4 +8,7 @@ html {
 
 body {
   font-size: 1.4rem;
+  color: #4E5968;
+  width: 100dvw;
+  height: 100dvh;
 }
