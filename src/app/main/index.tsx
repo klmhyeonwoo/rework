@@ -28,6 +28,7 @@ import moment from "moment";
 import "moment/locale/ko";
 import { Beforeunload } from "react-beforeunload";
 import NotDataWithContentBox from "@/component/common/NotDataWithContentBox.tsx";
+import StatusBar from "@/component/main/StatusBar.tsx";
 
 export type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -231,6 +232,7 @@ export default function Main() {
                     text-align: center;
                   `}
                 />
+                <StatusBar todoList={todo} completeList={complete} />
               </ContentBox>
             </div>
             <ContentBox
