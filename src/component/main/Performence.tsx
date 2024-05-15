@@ -15,6 +15,8 @@ import telemechine3D from "@/assets/3d/performence/telemechine.gif";
 
 import { css } from "@emotion/react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+
 import "swiper/css";
 import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
 import { useRef } from "react";
@@ -41,7 +43,16 @@ export default function Performence() {
 
   return (
     <div>
-      <Swiper spaceBetween={30} slidesPerView={3}>
+      <Swiper
+        modules={[Autoplay]}
+        spaceBetween={30}
+        slidesPerView={3.5}
+        autoplay={{
+          delay: 1500,
+          disableOnInteraction: false,
+        }}
+        loop={true}
+      >
         {mock.map((item) => {
           const key = useRef(Math.floor(Math.random() * GRAPHIC_LIST.length));
           return (
