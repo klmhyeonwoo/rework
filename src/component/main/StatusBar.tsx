@@ -59,7 +59,7 @@ export default function StatusBar({ todoList, completeList }: statusDataProps) {
         `}
       >
         <span id="score">
-          {todoList.length && completeList.length ? Math.floor((completeList.length / (todoList.length + completeList.length)) * 100) : 0}%{" "}
+          {todoList.length || completeList.length ? Math.floor((completeList.length / (todoList.length + completeList.length)) * 100) : 0}%{" "}
         </span>
         <div>
           <span>
