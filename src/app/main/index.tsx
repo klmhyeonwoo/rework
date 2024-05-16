@@ -156,7 +156,7 @@ export default function Main() {
                 }
               >
                 {todo.length ? (
-                  <TodoList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} ref={todoRef} />
+                  <TodoList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} setFocus={setFocus} ref={todoRef} />
                 ) : (
                   <NotDataWithContentBox> 오늘 생성된 아젠다가 존재하지 않습니다 </NotDataWithContentBox>
                 )}

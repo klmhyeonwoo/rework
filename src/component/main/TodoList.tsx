@@ -12,9 +12,10 @@ interface listProps {
   setTodo: Dispatch<SetStateAction<agendaProps[]>>;
   completeList: agendaProps[];
   setComplete: Dispatch<SetStateAction<agendaProps[]>>;
+  setFocus: Dispatch<SetStateAction<boolean>>;
 }
 
-const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: listProps, ref: React.Ref<HTMLDivElement>) => {
+const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo, setFocus }: listProps, ref: React.Ref<HTMLDivElement>) => {
   const changeNewData = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const list = [...todoList];
     if (event.target.value === "") {
@@ -22,6 +23,7 @@ const TodoList = forwardRef(({ completeList, setComplete, todoList, setTodo }: l
     } else {
       list[index].content = event.target.value;
     }
+    setFocus(false);
     setTodo(list);
   };
 
