@@ -52,6 +52,7 @@ export default function ContentBox({ title, subscribe, length, children, util, .
           box-sizing: border-box;
           min-height: 30rem;
           transition: 0.4s all;
+          overflow-x: hidden;
         `}
         {...props}
       >
