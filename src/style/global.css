@@ -11,4 +11,17 @@ body {
   color: #4E5968;
   width: 100dvw;
   height: 100dvh;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  padding: 1.1rem 2.3rem;
+  border: none;
+  background: #222222;
+  color: white;
+  border-radius: 0.6rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 100%;
 }
