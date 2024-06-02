@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import executeLogin from "@/hooks/api/member/login.tsx";
 import { ModalPortal } from "@/component/Modal/modal.tsx";
 import shaking from "@/assets/emoji/shaking-face.png";
+import mail from "@/assets/icon/mail.svg";
+import password from "@/assets/icon/password.svg";
 
 export default function SignIn() {
   const [ID, setID] = useState("");
@@ -115,16 +117,17 @@ export default function SignIn() {
               transform: ${PW_CHECK ? "translateY(-20px)" : ""};
             `}
           >
-            <Input name="ID" value={ID} placeholder={"사용하고 계신 이메일을 입력해주세요"} onChange={(e) => handleChange(e)} />
+            <Input title="이메일 주소" icon={mail} name="ID" value={ID} onChange={(e) => handleChange(e)} />
             <Input
+              isVisible={ID_CHECK}
               css={css`
-                display: ${ID_CHECK ? "flex" : "none"};
                 animation: ${fadeUp} 0.4s;
               `}
+              title="비밀번호"
               name="PW"
+              icon={password}
               type="password"
               value={PW}
-              placeholder={"비밀번호를 입력해주세요"}
               onChange={(e) => handleChange(e)}
             />
             <Button
@@ -161,7 +164,6 @@ export default function SignIn() {
               font-weight: 400;
             `}
           >
-            {" "}
             우리는 효율적으로 일하는{" "}
             <span
               css={css`
@@ -169,8 +171,8 @@ export default function SignIn() {
               `}
             >
               리워크
-            </span>{" "}
-            입니다{" "}
+            </span>
+            입니다
           </span>
           <div
             css={css`
