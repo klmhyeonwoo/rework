@@ -29,6 +29,7 @@ import "moment/locale/ko";
 import { Beforeunload } from "react-beforeunload";
 import NotDataWithContentBox from "@/component/common/NotDataWithContentBox.tsx";
 import StatusBar from "@/component/main/StatusBar.tsx";
+import { useApiPostMonthAgenda } from "@/hooks/api/agenda/month/useApiPostMonthAgenda.ts";
 
 export type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -58,6 +59,9 @@ export default function Main() {
   // const CHARACTER_LIST = [ball, creature, donut, flower, fuzz, heart, star];
   const key = useRef(Math.floor(Math.random() * GRAPHIC_LIST.length));
   const todoRef = useRef(null);
+
+  // const { data: monthAgenda } = useApiGetMonthAgenda();
+  const { mutate } = useApiPostMonthAgenda();
 
   useEffect(() => {
     /** 오늘의 첫 방문이라면 웰컴 멘트를 제공하고, 이러한 상황이 아니라면 기존 스토리지에 값을 조회하여 멘트 제공에 대한 판단을 진행합니다. */
@@ -231,6 +235,7 @@ export default function Main() {
                     font-size: 1.5rem;
                     text-align: center;
                   `}
+                  onBlur={() => mutate()}
                 />
                 <StatusBar todoList={todo} completeList={complete} />
               </ContentBox>

@@ -1,17 +1,20 @@
 import { css } from "@emotion/react";
 import Logo from "@/assets/img/logo_symbol.svg?react";
 import Input from "@/component/common/Input.tsx";
-import { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { EMAIL_REGEX } from "@/util/regex.ts";
 import { fadeUp } from "@/style/keyframe.ts";
 import Button from "@/component/common/Button.tsx";
 import { DESIGN_SYSTEM_COLOR, DESIGN_SYSTEM_TEXT } from "@/style/variable.ts";
 import { useNavigate } from "react-router-dom";
-import executeLogin from "@/hooks/api/member/login.tsx";
 import { ModalPortal } from "@/component/Modal/modal.tsx";
 import shaking from "@/assets/emoji/shaking-face.png";
+import diagonalMouth from "@/assets/emoji/diagonal-mouth.png";
 import mail from "@/assets/icon/mail.svg";
 import password from "@/assets/icon/password.svg";
+import executeLogin from "@/hooks/api/member/executeLogin.ts";
+import { confirmChangePassword } from "@/hooks/api/member/confirmChangePassword.ts";
+import { requestAccount } from "@/hooks/api/member/requestAccount.ts";
 
 export default function SignIn() {
   const [ID, setID] = useState("");
@@ -23,9 +26,14 @@ export default function SignIn() {
   const [USER_EMAIL_CHECK, setEmailCheck] = useState(false);
 
   const [isModal, setModalState] = useState(false);
+  const [isDuplicatedModal, setDuplicatedModalState] = useState(false);
+  const [isRequest, setRequest] = useState(false);
 
   const navigate = useNavigate();
+  const date = new Date();
+  const day = date.getDate();
 
+  /** 입력 값 상태 변화 함수 */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "ID") {
       setID(e.target.value);
@@ -53,17 +61,51 @@ export default function SignIn() {
     }
   };
 
+  /** 로그인 관련 함수 */
   const handleLogin = () => {
     /** TODO: 로그인 API 로직 */
     executeLogin(ID, PW)
       .then((res) => {
-        console.log(res);
-        navigate("/main");
+        // navigate("/main");
+        localStorage.setItem("REWORK_AC", res.accessToken);
+        confirmChangePassword()
+          .then((res) => {
+            console.log(res.data.initialPasswordUpdateState);
+            if (!res.data.initialPasswordUpdateState) {
+              navigate("/change", { state: { userId: ID } });
+            } else {
+              navigate("/main");
+            }
+          })
+          .catch((err) => console.log(err));
       })
       .catch(() => {
         setModalState(true);
       });
   };
+
+  const handleRequestAccount = () => {
+    requestAccount(USER_EMAIL)
+      .then(() => {
+        localStorage.setItem("REWORK_REQUESTED", day.toString());
+        setRequest(true);
+        setUserEmail("");
+        setEmailCheck(false);
+      })
+      .catch(() => {
+        setUserEmail("");
+        setEmailCheck(false);
+        setDuplicatedModalState(true);
+      });
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("REWORK_REQUESTED")) setRequest(true);
+    if (localStorage.getItem("REWORK_AC")) {
+      // navigate("/main");
+      localStorage.removeItem("REWORK_AC");
+    }
+  }, []);
 
   return (
     <Fragment>
@@ -71,6 +113,7 @@ export default function SignIn() {
         <ModalPortal
           setModalState={setModalState}
           title="Oops.."
+          isDoubleButton={false}
           content={
             <Fragment>
               <span>리워크를 이용하기 위해서는 사전의 이메일 등록이 필요해요</span>
@@ -78,6 +121,20 @@ export default function SignIn() {
             </Fragment>
           }
           feature_image={shaking}
+        />
+      )}
+      {isDuplicatedModal && (
+        <ModalPortal
+          setModalState={setDuplicatedModalState}
+          title="Oops.."
+          isDoubleButton={false}
+          content={
+            <Fragment>
+              <span>이미 등록 요청이 되어진 계정이에요</span>
+              <span>리워크를 원활하게 이용하기 위해서는 다른 계정을 이용해주세요</span>
+            </Fragment>
+          }
+          feature_image={diagonalMouth}
         />
       )}
       <section
@@ -119,7 +176,6 @@ export default function SignIn() {
           >
             <Input title="이메일 주소" icon={mail} name="ID" value={ID} onChange={(e) => handleChange(e)} />
             <Input
-              isVisible={ID_CHECK}
               css={css`
                 animation: ${fadeUp} 0.4s;
               `}
@@ -128,6 +184,7 @@ export default function SignIn() {
               icon={password}
               type="password"
               value={PW}
+              visible={ID_CHECK}
               onChange={(e) => handleChange(e)}
             />
             <Button
@@ -164,13 +221,13 @@ export default function SignIn() {
               font-weight: 400;
             `}
           >
-            우리는 효율적으로 일하는{" "}
+            우리는 효율적으로 일하는
             <span
               css={css`
                 ${DESIGN_SYSTEM_TEXT.S1}
               `}
             >
-              리워크
+              {" 리워크"}
             </span>
             입니다
           </span>
@@ -201,8 +258,9 @@ export default function SignIn() {
                 }
               `}
               value={USER_EMAIL}
-              placeholder={"이곳에 이메일을 기재해주시면 컨텍 메일을 드릴게요"}
+              placeholder={isRequest ? "신청이 완료되었어요, 잠시만 기다려주세요" : "이곳에 이메일을 기재해주시면 컨텍 메일을 드릴게요"}
               onChange={(e) => handleChange(e)}
+              disabled={isRequest && true}
             />
             <div
               css={css`
@@ -229,9 +287,16 @@ export default function SignIn() {
                   }
                 `}
               >
-                <span>예</span>
+                <span onClick={handleRequestAccount}>예</span>
                 <span>/</span>
-                <span>아니요</span>
+                <span
+                  onClick={() => {
+                    setUserEmail("");
+                    setEmailCheck(false);
+                  }}
+                >
+                  아니요
+                </span>
               </div>
             </div>
           </div>
