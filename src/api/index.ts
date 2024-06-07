@@ -28,8 +28,9 @@ const onError = (status: number, message: string) => {
 
 /** request 요청 시, config 객체를 받아와 처리하는 함수 */
 const onRequest = (config: AxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-  const token = localStorage.getItem("AT");
+  const token = localStorage.getItem("REWORK_AC");
   const { method, url, headers = {} } = config;
+  console.log("요청 토큰 : ", token);
 
   headers.Authorization = token ? `Bearer ${token}` : "";
   logOnDev(`[API REQUEST] ${method?.toUpperCase()} ${url}`);

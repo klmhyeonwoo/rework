@@ -9,8 +9,9 @@ interface modalProps {
   title: string;
   feature_image: string;
   content: ReactNode;
+  isDoubleButton: boolean;
 }
-export default function Modal({ title, feature_image, setModalState, content }: modalProps) {
+export default function Modal({ title, feature_image, setModalState, content, isDoubleButton }: modalProps) {
   const handlePositiveButton = () => {
     setModalState(false);
   };
@@ -56,6 +57,17 @@ export default function Modal({ title, feature_image, setModalState, content }: 
 
             color: ${DESIGN_SYSTEM_COLOR.kreamBlack};
 
+            button {
+              padding: 1.1rem 2.3rem;
+              border: none;
+              background: #222222;
+              color: white;
+              border-radius: 0.6rem;
+              font-size: 1.1rem;
+              cursor: pointer;
+              width: 100%;
+            }
+
             #modal-header {
               font-size: 1.7rem;
               font-weight: 800;
@@ -91,8 +103,11 @@ export default function Modal({ title, feature_image, setModalState, content }: 
               margin-top: auto;
 
               & > button:nth-of-type(1) {
-                background: ${DESIGN_SYSTEM_COLOR.grey200};
-                color: ${DESIGN_SYSTEM_COLOR.kreamBlack};
+                ${isDoubleButton &&
+                css`
+                  background: ${DESIGN_SYSTEM_COLOR.grey200};
+                  color: ${DESIGN_SYSTEM_COLOR.kreamBlack};
+                `}
               }
             }
           `}
@@ -101,7 +116,7 @@ export default function Modal({ title, feature_image, setModalState, content }: 
           <div id="modal-featured-image">{feature_image ? <img src={feature_image} /> : <img src={lying} />}</div>
           <div id="modal-subtext">{content ? content : <span> 모달에 들어갈 멋진 내용을 입력해주세요 </span>}</div>
           <div id="modal-button-container">
-            <button onClick={handleNegativeButton}> 취소할게요 </button>
+            {isDoubleButton && <button onClick={handleNegativeButton}> 취소할게요 </button>}
             <button onClick={handlePositiveButton}> 확인했어요 </button>
           </div>
         </div>
@@ -109,7 +124,10 @@ export default function Modal({ title, feature_image, setModalState, content }: 
     </div>
   );
 }
-export const ModalPortal = ({ title, feature_image, setModalState, content }: modalProps) => {
+export const ModalPortal = ({ title, feature_image, setModalState, content, isDoubleButton = true }: modalProps) => {
   const el = document.getElementById("modal");
-  return createPortal(<Modal title={title} feature_image={feature_image} setModalState={setModalState} content={content} />, el as HTMLElement);
+  return createPortal(
+    <Modal title={title} isDoubleButton={isDoubleButton} feature_image={feature_image} setModalState={setModalState} content={content} />,
+    el as HTMLElement,
+  );
 };
