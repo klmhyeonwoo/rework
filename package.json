@@ -14,6 +14,7 @@
     "@hello-pangea/dnd": "^16.6.0",
     "@tanstack/react-query": "^5.40.1",
     "axios": "^1.7.2",
+    "jotai": "^2.8.4",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "prettier": "^3.2.5",

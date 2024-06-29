@@ -3,14 +3,20 @@ import Checkbox from "@/assets/img/checked-box.svg?react";
 import { Dispatch, SetStateAction } from "react";
 import Input from "@/component/main/Input.tsx";
 import { agendaProps } from "@/app/main";
+import { useApiEditTodayAgenda } from "@/hooks/api/agenda/today/useApiEditTodayAgenda.ts";
 
 interface listProps {
   todoList: agendaProps[];
   setTodo: Dispatch<SetStateAction<agendaProps[]>>;
   completeList: agendaProps[];
   setComplete: Dispatch<SetStateAction<agendaProps[]>>;
+  year: number | string;
+  month: number | string;
+  day: number | string;
 }
-export default function CompleteList({ completeList, setComplete, todoList, setTodo }: listProps) {
+export default function CompleteList({ completeList, setComplete, todoList, setTodo, year, month, day }: listProps) {
+  const { mutate: editAgenda } = useApiEditTodayAgenda();
+
   return (
     <div
       css={css`
@@ -33,11 +39,21 @@ export default function CompleteList({ completeList, setComplete, todoList, setT
               width={15}
               height={15}
               onClick={() => {
-                setComplete(completeList.filter((complete) => complete !== item));
-                setTodo([item, ...todoList]);
+                if (item.id) {
+                  editAgenda(
+                    { agendaId: item.id, todo: item.todo, state: false, pagingId: item.pagingId },
+                    {
+                      onSuccess: () => {
+                        item.createdAt = `${year}-${month}-${day}`;
+                        setComplete(completeList.filter((complete) => complete !== item));
+                        setTodo([item, ...todoList]);
+                      },
+                    },
+                  );
+                }
               }}
             />
-            <Input value={item.content} disabled />
+            <Input value={item.todo} disabled />
           </div>
         );
       })}

@@ -4,9 +4,10 @@ import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
 
 type inputProps = {
   value: string;
+  type?: string;
   placeholder?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "types">;
-export default function Input({ value, placeholder, ...props }: inputProps) {
+export default function Input({ value, type, placeholder, ...props }: inputProps) {
   const [agenda, setAgenda] = useState(value);
 
   return (
@@ -23,7 +24,7 @@ export default function Input({ value, placeholder, ...props }: inputProps) {
         }
       `}
       placeholder={placeholder}
-      value={agenda}
+      value={type ? value : agenda}
       onChange={(e) => setAgenda(e.target.value)}
       {...props}
     />

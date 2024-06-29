@@ -10,6 +10,7 @@ const baseApi = axios.create({
   headers: {
     "Content-Type": "application/json",
     // "Access-Control-Allow-Credentials": true,
+    // withCredentials: true,
   },
 });
 
@@ -30,7 +31,6 @@ const onError = (status: number, message: string) => {
 const onRequest = (config: AxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
   const token = localStorage.getItem("REWORK_AC");
   const { method, url, headers = {} } = config;
-  console.log("요청 토큰 : ", token);
 
   headers.Authorization = token ? `Bearer ${token}` : "";
   logOnDev(`[API REQUEST] ${method?.toUpperCase()} ${url}`);

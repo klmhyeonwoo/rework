@@ -15,7 +15,6 @@ import password from "@/assets/icon/password.svg";
 import executeLogin from "@/hooks/api/member/executeLogin.ts";
 import { confirmChangePassword } from "@/hooks/api/member/confirmChangePassword.ts";
 import { requestAccount } from "@/hooks/api/member/requestAccount.ts";
-
 export default function SignIn() {
   const [ID, setID] = useState("");
   const [PW, setPW] = useState("");
@@ -28,6 +27,7 @@ export default function SignIn() {
   const [isModal, setModalState] = useState(false);
   const [isDuplicatedModal, setDuplicatedModalState] = useState(false);
   const [isRequest, setRequest] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const date = new Date();
@@ -63,6 +63,7 @@ export default function SignIn() {
 
   /** 로그인 관련 함수 */
   const handleLogin = () => {
+    setLoading(true);
     /** TODO: 로그인 API 로직 */
     executeLogin(ID, PW)
       .then((res) => {
@@ -76,10 +77,14 @@ export default function SignIn() {
             } else {
               navigate("/main");
             }
+            setLoading(false);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch(() => {
+        setLoading(false);
         setModalState(true);
       });
   };
@@ -100,7 +105,9 @@ export default function SignIn() {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("REWORK_REQUESTED")) setRequest(true);
+    const REQUESTED = localStorage.getItem("REWORK_REQUESTED");
+    if (REQUESTED && day === parseInt(REQUESTED)) setRequest(true);
+    if (REQUESTED) localStorage.removeItem("REWORK_REQUESTED");
     if (localStorage.getItem("REWORK_AC")) {
       // navigate("/main");
       localStorage.removeItem("REWORK_AC");
@@ -188,6 +195,7 @@ export default function SignIn() {
               onChange={(e) => handleChange(e)}
             />
             <Button
+              loading={isLoading}
               css={css`
                 display: ${PW_CHECK ? "flex" : "none"};
                 animation: ${fadeUp} 0.4s;
@@ -212,6 +220,8 @@ export default function SignIn() {
             box-sizing: border-box;
             transition: 0.4s all;
             transform: ${USER_EMAIL_CHECK ? "translateY(-10px)" : ""};
+
+            display: none;
           `}
         >
           <span
