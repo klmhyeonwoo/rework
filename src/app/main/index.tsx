@@ -30,18 +30,26 @@ import { Beforeunload } from "react-beforeunload";
 import NotDataWithContentBox from "@/component/common/NotDataWithContentBox.tsx";
 import StatusBar from "@/component/main/StatusBar.tsx";
 import { useApiPostMonthAgenda } from "@/hooks/api/agenda/month/useApiPostMonthAgenda.ts";
+import { getTodayAgenda } from "@/hooks/api/agenda/today/useApiGetTodayAgenda.ts";
+// import { useApiGetMonthAgenda } from "@/hooks/api/agenda/month/useApiGetMonthAgenda.ts";
 
 export type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
 export interface agendaProps {
-  id: number;
-  content: string;
+  id?: number;
+  todo: string;
+  state: boolean;
+  pagingId: number;
+  createdAt?: string;
 }
+
 export default function Main() {
   const [chapter, setChapter] = useState(0);
   const [complete, setComplete] = useState<agendaProps[]>([]);
   const [todo, setTodo] = useState<agendaProps[]>([]);
   const [focus, setFocus] = useState(false);
+  const [monthAgenda, setMonthAgenda] = useState("");
+  const [dayDiff, setDayDiff] = useState(0);
   const scaledDateNumber = (number: number) => {
     if (number < 10) {
       return `0${number}`;
@@ -51,6 +59,7 @@ export default function Main() {
   };
 
   const [dateObj, setDate] = useState<Value>(new Date());
+  const today = moment();
   const year = scaledDateNumber((dateObj as Date).getFullYear());
   const month = scaledDateNumber((dateObj as Date).getMonth() + 1);
   const day = scaledDateNumber((dateObj as Date).getDate());
@@ -61,7 +70,36 @@ export default function Main() {
   const todoRef = useRef(null);
 
   // const { data: monthAgenda } = useApiGetMonthAgenda();
-  const { mutate } = useApiPostMonthAgenda();
+  const { mutate: setMonthlyAgenda } = useApiPostMonthAgenda();
+  // const { mutate: setTodayAgendaSet } = useApiPostTodayAgenda();
+
+  // TODO: 이달의 아젠다 조회, 서버 쪽 해결이 되면 바로 다시 시작
+  // const { data: getMonthlyAgenda } = useApiGetMonthAgenda();
+
+  useEffect(() => {
+    setTodo([]);
+    setComplete([]);
+    /** 오늘의 TODO 아젠다를 불러오기 */
+    getTodayAgenda({ year: year, month: month, day: day, state: false })
+      .then((res) => {
+        setTodo(res.agendaList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    /** 오늘의 COMPLETED 아젠다를 불러오기 */
+    getTodayAgenda({ year: year, month: month, day: day, state: true })
+      .then((res) => {
+        setComplete(res.agendaList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const date = moment(`${year}-${month}-${day}`);
+    setDayDiff(today.diff(date, "days"));
+  }, [year, month, day]);
 
   useEffect(() => {
     /** 오늘의 첫 방문이라면 웰컴 멘트를 제공하고, 이러한 상황이 아니라면 기존 스토리지에 값을 조회하여 멘트 제공에 대한 판단을 진행합니다. */
@@ -98,6 +136,7 @@ export default function Main() {
       }
       setFocus(false);
     }
+    // TODO: 아젠다 연결부분 이어서 진행하기
   }, [todo]);
 
   return (
@@ -143,6 +182,10 @@ export default function Main() {
                 util={
                   <Add
                     css={css`
+                      ${dayDiff !== 0 &&
+                      css`
+                        display: none;
+                      `}
                       margin-left: auto;
                       cursor: pointer;
                       pointer-events: ${focus && "none"};
@@ -150,17 +193,36 @@ export default function Main() {
                     width={20}
                     height={20}
                     onClick={() => {
-                      if (todo.length < 1 || todo[0].content !== "") {
-                        setTodo([{ id: todo.length + complete.length, content: "" }, ...todo]);
+                      if (todo.length < 1 || todo[0].todo !== "") {
+                        setTodo([
+                          {
+                            todo: "",
+                            state: true,
+                            pagingId: todo.length + complete.length,
+                            createdAt: `${year}-${month}-${day}`,
+                          },
+                          ...todo,
+                        ]);
                       } else {
-                        setTodo(todo.filter((todo) => todo.content !== ""));
+                        setTodo(todo.filter((todo) => todo.todo !== ""));
                       }
                     }}
                   />
                 }
               >
                 {todo.length ? (
-                  <TodoList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} setFocus={setFocus} ref={todoRef} />
+                  <TodoList
+                    completeList={complete}
+                    setComplete={setComplete}
+                    todoList={todo}
+                    setTodo={setTodo}
+                    setFocus={setFocus}
+                    ref={todoRef}
+                    year={year}
+                    month={month}
+                    day={day}
+                    dayDiff={dayDiff}
+                  />
                 ) : (
                   <NotDataWithContentBox> 오늘 생성된 아젠다가 존재하지 않습니다 </NotDataWithContentBox>
                 )}
@@ -207,14 +269,22 @@ export default function Main() {
               </ContentBox>
               <ContentBox title="완료된 아젠다" subscribe="오늘 내가 완료한 아젠다를 확인할 수 있어요" length={complete.length}>
                 {complete.length ? (
-                  <CompleteList completeList={complete} setComplete={setComplete} todoList={todo} setTodo={setTodo} />
+                  <CompleteList
+                    completeList={complete}
+                    setComplete={setComplete}
+                    todoList={todo}
+                    setTodo={setTodo}
+                    year={year}
+                    month={month}
+                    day={day}
+                  />
                 ) : (
                   <NotDataWithContentBox> 아직 완료된 아젠다가 존재하지 않습니다 </NotDataWithContentBox>
                 )}
               </ContentBox>
               <ContentBox
-                title="이번 달 아젠다"
-                subscribe="내가 선정한 이번 달 아젠다를 확인할 수 있어요"
+                title="아젠다 마일스톤"
+                subscribe="오늘의 아젠다 마일스톤을 확인해보세요"
                 css={css`
                   justify-content: center;
                   align-items: center;
@@ -230,12 +300,15 @@ export default function Main() {
                   `}
                 />
                 <Input
-                  value={"팀 리워크의 1차 MVP 런칭"}
                   css={css`
                     font-size: 1.5rem;
                     text-align: center;
                   `}
-                  onBlur={() => mutate()}
+                  placeholder={"이달의 아젠다를 입력해주세요"}
+                  type="monthly"
+                  value={monthAgenda}
+                  onChange={(e) => setMonthAgenda(e.target.value)}
+                  onBlur={() => setMonthlyAgenda({ monthAgenda })}
                 />
                 <StatusBar todoList={todo} completeList={complete} />
               </ContentBox>
