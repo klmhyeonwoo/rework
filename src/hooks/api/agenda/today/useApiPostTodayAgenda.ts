@@ -24,5 +24,6 @@ export const useApiPostTodayAgenda = () => {
   return useMutation({
     mutationFn: ({ todo, pagingId, createdAt }: postAgendaProps) => postAgenda({ todo, pagingId, createdAt }),
     onSuccess: (res) => console.log(res),
+    onError: (err) => console.log(err),
   });
 };

@@ -52,6 +52,30 @@ const TodoList = forwardRef(
       return result;
     };
 
+    const postData = (item: agendaProps) => {
+      if (mode === "post")
+        postAgenda(
+          { todo: item.todo, pagingId: item.pagingId, createdAt: item.createdAt },
+          {
+            onSuccess: (data) => {
+              item.agendaId = data.data.agendaId;
+            },
+            onError: () => {
+              console.log(todoList);
+            },
+          },
+        );
+      if (mode === "edit" && item.agendaId)
+        editAgenda(
+          { agendaId: item.agendaId, todo: item.todo, state: false, pagingId: item.pagingId },
+          {
+            onSuccess: () => {
+              item.createdAt = `${year}-${month}-${day}`;
+            },
+          },
+        );
+    };
+
     const onDragEnd = (result: DropResult) => {
       if (!result.destination) {
         return;
@@ -78,10 +102,10 @@ const TodoList = forwardRef(
                 >
                   {todoList.map((item, index) => {
                     return (
-                      <Draggable key={item.id} draggableId={String(item.id)} index={index}>
+                      <Draggable key={item.agendaId} draggableId={String(item.agendaId)} index={index}>
                         {(provided) => (
                           <div
-                            key={item.id}
+                            key={item.agendaId}
                             // style={getItemStyle(provided.draggableStyle, snapshot.isDraggingOver)}
                             css={css`
                               display: flex;
@@ -119,9 +143,9 @@ const TodoList = forwardRef(
                               height={15}
                               onClick={() => {
                                 if (dayDiff !== 0) return;
-                                if (item.id)
+                                if (item.agendaId)
                                   editAgenda(
-                                    { agendaId: item.id, todo: item.todo, state: true, pagingId: item.pagingId },
+                                    { agendaId: item.agendaId, todo: item.todo, state: true, pagingId: item.pagingId },
                                     {
                                       onSuccess: () => {
                                         item.createdAt = `${year}-${month}-${day}`;
@@ -150,24 +174,32 @@ const TodoList = forwardRef(
                                 onBlur={(event) => {
                                   changeNewData(event, index);
                                   if (item.todo !== "") {
-                                    if (mode === "post")
-                                      postAgenda(
-                                        { todo: item.todo, pagingId: item.pagingId, createdAt: item.createdAt },
-                                        {
-                                          onSuccess: (data) => {
-                                            item.id = data.data.agendaId;
-                                          },
-                                        },
-                                      );
-                                    if (mode === "edit" && item.id)
+                                    // 포스팅을 하려고 했는데, 현재 내 인덱스 번호가 일치하지 않을 경우
+                                    console.log(todoList[item.pagingId + 1]);
+                                    const nextList = todoList[item.pagingId + 1];
+                                    if (nextList && nextList.todo !== "" && mode === "post") {
+                                      const nextPagingId = nextList.pagingId + 1;
                                       editAgenda(
-                                        { agendaId: item.id, todo: item.todo, state: false, pagingId: item.pagingId },
+                                        {
+                                          agendaId: nextList.agendaId as number,
+                                          todo: nextList.todo,
+                                          state: false,
+                                          pagingId: nextPagingId,
+                                        },
                                         {
                                           onSuccess: () => {
                                             item.createdAt = `${year}-${month}-${day}`;
+                                            nextList.pagingId = nextPagingId;
+                                            postData(item);
+                                          },
+                                          onError: () => {
+                                            console.log(todoList);
                                           },
                                         },
                                       );
+                                    } else {
+                                      postData(item);
+                                    }
                                   }
                                 }}
                                 onFocus={(e) => {
@@ -181,7 +213,6 @@ const TodoList = forwardRef(
                                   if (event.key === "Enter") {
                                     const list = [...todoList];
                                     if ((event.target as HTMLInputElement).value !== "") {
-                                      console.log(index);
                                       list.splice(index + 1, 0, {
                                         todo: "",
                                         state: true,
@@ -205,8 +236,8 @@ const TodoList = forwardRef(
                                   right: 0;
                                 `}
                                 onClick={() => {
-                                  if (item.id) {
-                                    removeTodayAgenda({ id: item.id })
+                                  if (item.agendaId) {
+                                    removeTodayAgenda({ id: item.agendaId })
                                       .then(() => setTodo(todoList.filter((todo) => todo !== item)))
                                       .catch((err) => console.log(err));
                                   }

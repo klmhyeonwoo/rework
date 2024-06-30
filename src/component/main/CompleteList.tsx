@@ -28,7 +28,7 @@ export default function CompleteList({ completeList, setComplete, todoList, setT
       {completeList.map((item) => {
         return (
           <div
-            key={item.id}
+            key={item.agendaId}
             css={css`
               display: flex;
               align-items: center;
@@ -39,9 +39,9 @@ export default function CompleteList({ completeList, setComplete, todoList, setT
               width={15}
               height={15}
               onClick={() => {
-                if (item.id) {
+                if (item.agendaId) {
                   editAgenda(
-                    { agendaId: item.id, todo: item.todo, state: false, pagingId: item.pagingId },
+                    { agendaId: item.agendaId, todo: item.todo, state: false, pagingId: item.pagingId },
                     {
                       onSuccess: () => {
                         item.createdAt = `${year}-${month}-${day}`;
