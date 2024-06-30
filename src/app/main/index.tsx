@@ -36,7 +36,7 @@ import { getTodayAgenda } from "@/hooks/api/agenda/today/useApiGetTodayAgenda.ts
 export type ValuePiece = Date | null;
 export type Value = ValuePiece | [ValuePiece, ValuePiece];
 export interface agendaProps {
-  id?: number;
+  agendaId?: number;
   todo: string;
   state: boolean;
   pagingId: number;
