@@ -214,16 +214,16 @@ const TodoList = forwardRef(
                                 }}
                                 onKeyUp={(event) => {
                                   if (event.key === "Enter") {
-                                    // const list = [...todoList];
-                                    // if ((event.target as HTMLInputElement).value !== "") {
-                                    //   list.splice(index + 1, 0, {
-                                    //     todo: "",
-                                    //     state: true,
-                                    //     pagingId: index + 1,
-                                    //     createdAt: `${year}-${month}-${day}`,
-                                    //   });
-                                    //   setTodo(list);
-                                    // }
+                                    const list = [...todoList];
+                                    if ((event.target as HTMLInputElement).value !== "") {
+                                      list.splice(index + 1, 0, {
+                                        todo: "",
+                                        state: true,
+                                        pagingId: index + 1,
+                                        createdAt: `${year}-${month}-${day}`,
+                                      });
+                                      setTodo(list);
+                                    }
                                   }
                                 }}
                                 disabled={dayDiff !== 0}
