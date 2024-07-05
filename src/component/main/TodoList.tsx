@@ -10,6 +10,7 @@ import { useApiPostTodayAgenda } from "@/hooks/api/agenda/today/useApiPostTodayA
 import { removeTodayAgenda } from "@/hooks/api/agenda/today/useApiRemoveTodayAgenda.ts";
 import { useApiEditTodayAgenda } from "@/hooks/api/agenda/today/useApiEditTodayAgenda.ts";
 import { DESIGN_SYSTEM_COLOR } from "@/style/variable.ts";
+import { useApiOrderTodayAgenda } from "@/hooks/api/agenda/today/useApiOrderTodayAgenda.ts";
 
 interface listProps {
   todoList: agendaProps[];
@@ -27,6 +28,7 @@ const TodoList = forwardRef(
   ({ dayDiff, year, month, day, completeList, setComplete, todoList, setTodo, setFocus }: listProps, ref: React.Ref<HTMLDivElement>) => {
     const { mutate: postAgenda } = useApiPostTodayAgenda();
     const { mutate: editAgenda } = useApiEditTodayAgenda();
+    const { mutate: orderAgenda } = useApiOrderTodayAgenda();
 
     /** mode는 해당 아젠다 리스트에 각 요소를 포커스 시에, 값이 존재하면 "edit" 값이 존재하지 않으면 "post"가 되도록 설정
      * 해당 mode를 통해 서버에 전송하는 API도 달라지는 것을 확인할 수 있음
@@ -83,7 +85,8 @@ const TodoList = forwardRef(
 
       const items = reorder(todoList, result.source.index, result.destination.index);
       setTodo([...items]);
-      // orderAgenda([...items]);
+      console.log(items);
+      orderAgenda([...items]);
     };
 
     return (
@@ -211,16 +214,16 @@ const TodoList = forwardRef(
                                 }}
                                 onKeyUp={(event) => {
                                   if (event.key === "Enter") {
-                                    const list = [...todoList];
-                                    if ((event.target as HTMLInputElement).value !== "") {
-                                      list.splice(index + 1, 0, {
-                                        todo: "",
-                                        state: true,
-                                        pagingId: index + 1,
-                                        createdAt: `${year}-${month}-${day}`,
-                                      });
-                                      setTodo(list);
-                                    }
+                                    // const list = [...todoList];
+                                    // if ((event.target as HTMLInputElement).value !== "") {
+                                    //   list.splice(index + 1, 0, {
+                                    //     todo: "",
+                                    //     state: true,
+                                    //     pagingId: index + 1,
+                                    //     createdAt: `${year}-${month}-${day}`,
+                                    //   });
+                                    //   setTodo(list);
+                                    // }
                                   }
                                 }}
                                 disabled={dayDiff !== 0}

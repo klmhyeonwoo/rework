@@ -211,7 +211,7 @@ export default function SignIn() {
             display: flex;
             flex-direction: column;
             background: ${DESIGN_SYSTEM_COLOR.kreamBlack};
-            width: 40rem;
+            width: 43rem;
             border-radius: 7px;
             justify-content: center;
             align-items: center;
@@ -220,8 +220,6 @@ export default function SignIn() {
             box-sizing: border-box;
             transition: 0.4s all;
             transform: ${USER_EMAIL_CHECK ? "translateY(-10px)" : ""};
-
-            display: none;
           `}
         >
           <span
